@@ -11,13 +11,20 @@ import { Configuration, OpenAIApi } from "openai";
 // import { Link } from '@builder.io/qwik-city';
 
 export default component$(() => {
-  const x: any = useSignal("32");
+  const x: any = useSignal("answer goes here");
+
+  const prompt = useSignal("Give me one random animal");
 
   return (
     <section>
+      <textarea id="form" value={"say something"}></textarea>
+
       <h1
         onClick$={async () => {
-          x.value = await chat();
+          // alert(document.getElementById("form").value + "asdas");
+          prompt.value = document.getElementById("form").value;
+
+          x.value = await chat(prompt.value);
           // chat();
           // console.log("kish");
           // const number = chat();
@@ -25,17 +32,17 @@ export default component$(() => {
           // console.log("df " + number);
         }}
       >
-        hey there {x.value}
+        {x.value}
       </h1>
     </section>
   );
 });
 
-export const chat = server$(async () => {
+export const chat = server$(async (prompt: string) => {
   console.log("l am chat");
 
   const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
   });
   const openai = new OpenAIApi(configuration);
 
@@ -43,8 +50,8 @@ export const chat = server$(async () => {
 
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: "Give me a random color",
-    max_tokens: 7,
+    prompt: prompt,
+    max_tokens: 37,
     temperature: 1,
   });
 
